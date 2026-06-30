@@ -85,6 +85,17 @@ if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
     print("Set tokenizer.pad_token = eos_token")
 
+# Qwen2.5 BASE tokenizer ships WITHOUT a chat_template (only -Instruct has one).
+# Set ChatML so apply_chat_template works (Qwen2.5's native format).
+if tokenizer.chat_template is None:
+    tokenizer.chat_template = (
+        "{% for message in messages %}"
+        "{{ '<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n' }}"
+        "{% endfor %}"
+        "{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
+    )
+    print("Set ChatML chat_template on base tokenizer")
+
 # %%
 model = FastLanguageModel.get_peft_model(
     model,
