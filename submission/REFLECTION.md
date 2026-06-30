@@ -14,7 +14,7 @@
 | GPU | Free Colab T4 16 GB _(xác nhận lại từ nvidia-smi khi chạy)_ |
 | CUDA / driver | _(điền từ output `nvidia-smi` ở cell Setup)_ |
 | Base model | unsloth/Qwen2.5-3B-bnb-4bit |
-| SFT dataset slice | 5CD-AI/Vietnamese-alpaca-cleaned · 1000 samples · 1 epoch |
+| SFT dataset slice | bkai-foundation-models/vi-alpaca · 1000 samples · 1 epoch |
 | Preference dataset slice | argilla/ultrafeedback-binarized-preferences-cleaned · 1000 pairs · 1 epoch |
 | `COMPUTE_TIER` env | T4 |
 | Total cost | $0 (free Colab) |
