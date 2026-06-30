@@ -40,9 +40,16 @@ case "$TIER" in
 esac
 
 # ── 2. Install deps ─────────────────────────────────────────────────────
-# Colab pre-installs torch + transformers; let pip resolve compatible versions.
-# Unsloth's installer picks the right CUDA wheel.
-pip install -q -r requirements.txt
+# Colab pre-installs torch + transformers. Install Unsloth FIRST and alone so it
+# pulls the transformers/trl/peft/bitsandbytes it was patched against — co-pinning
+# those with wide ranges is the #1 Unsloth-on-Colab failure. Then the rest; keep the
+# fragile bonus-only deps (llama-cpp-python, lm-eval) non-fatal so they can't block core.
+pip install -q unsloth
+pip install -q "trl>=0.16,<0.20" "peft>=0.13,<1.0" "datasets>=3.1,<4.0" \
+  "matplotlib>=3.9,<4.0" "pandas>=2.2,<3.0" "pyarrow>=17,<22" \
+  "openai>=1.55,<2.0" "anthropic>=0.40,<1.0"
+pip install -q "llama-cpp-python>=0.3,<1.0" || echo "[colab] WARNING: llama-cpp-python failed; NB5 (bonus) GGUF smoke will skip"
+pip install -q "lm-eval[ifeval,math]>=0.4.5,<1.0" || echo "[colab] WARNING: lm-eval failed; NB6 (bonus) benchmark will skip"
 
 if [ "$TIER" = "BIGGPU" ]; then
   echo "[colab] Installing BigGPU extras (vllm, flash-attn) — may take 3-5 min"

@@ -50,7 +50,7 @@ data: ## NB2 — preference data prep (~2 min)
 	@$(JUPYTEXT) --to notebook --update notebooks/02_preference_data.py
 	@$(JUPYTER) nbconvert --to notebook --execute --inplace notebooks/02_preference_data.ipynb
 
-dpo: ## NB3 — full DPO training (~30 min T4 / ~20 min A100)
+dpo: ## NB3 — full DPO training (~15 min T4 / ~12 min A100)
 	@$(JUPYTEXT) --to notebook --update notebooks/03_dpo_train.py
 	@$(JUPYTER) nbconvert --to notebook --execute --inplace notebooks/03_dpo_train.ipynb
 

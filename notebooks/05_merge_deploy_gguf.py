@@ -68,15 +68,17 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
-# Stack SFT-mini → DPO adapters
-SFT_PATH = REPO_ROOT / "adapters" / "sft-mini"
-model = PeftModel.from_pretrained(model, str(SFT_PATH))
-print(f"Loaded SFT-mini adapter from {SFT_PATH}")
+# Load the DPO adapter (NB3's trained policy). NB4 evaluates the "SFT+DPO" model as
+# exactly `base + adapters/dpo`, so we merge the SAME thing → the GGUF matches the
+# model you compared in NB4. (Loading sft-mini here would export the UN-aligned SFT
+# checkpoint and the GGUF wouldn't reproduce your NB4 win-rate.)
+model = PeftModel.from_pretrained(model, str(DPO_PATH))
+print(f"Loaded DPO adapter from {DPO_PATH}")
 
 # %% [markdown]
-# > **Note:** The DPO adapter trained in NB3 stacks on top of SFT. To get a fully
-# > aligned merged model, we apply both adapters before merging. Unsloth's
-# > `save_pretrained_merged` handles the SFT + DPO + base merge in one shot.
+# > **Note:** NB4 defines the "SFT+DPO" model as `base + adapters/dpo` (it loads the
+# > DPO adapter alone). We merge exactly that, so the GGUF == the model you evaluated.
+# > `save_pretrained_merged` bakes the DPO adapter into the base weights in one shot.
 
 # %% [markdown]
 # ## 2. Save merged FP16 weights
@@ -86,7 +88,7 @@ print(f"Loaded SFT-mini adapter from {SFT_PATH}")
 # converter in step 3.
 
 # %%
-# This re-loads the model with both SFT and DPO adapters merged into base weights.
+# This bakes the DPO adapter into the base weights (the exact model NB4 evaluated).
 # Output is FP16 (or BF16 on Ampere+) HF-format weights ready for inference.
 model.save_pretrained_merged(
     str(MERGED_PATH),

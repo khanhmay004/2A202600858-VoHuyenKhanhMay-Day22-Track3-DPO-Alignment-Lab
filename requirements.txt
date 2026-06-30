@@ -7,7 +7,7 @@
 # pin is what locks the Unsloth + TRL compatibility matrix. Bump together.
 unsloth>=2025.10,<2026.5                # patched kernels for 7B-on-T4
 transformers>=4.46,<5.0
-trl>=0.12,<0.20                         # DPOTrainer + DPOConfig surface
+trl>=0.16,<0.20                         # DPOTrainer + DPOConfig (0.16+ needed for SFTConfig.max_length)
 peft>=0.13,<1.0
 accelerate>=1.1,<2.0
 bitsandbytes>=0.44,<1.0                 # NF4 + 8-bit optim

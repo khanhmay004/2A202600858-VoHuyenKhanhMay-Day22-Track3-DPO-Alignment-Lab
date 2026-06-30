@@ -1,9 +1,9 @@
 # Reflection — Lab 22 (DPO/ORPO Alignment)
 
-**Tên:** _<Họ Tên>_
-**Cohort:** _<A20-K1 / A20-K2 / ...>_
-**Tier đã chạy:** _<T4 | BIGGPU | both>_
-**Date:** _<YYYY-MM-DD>_
+**Tên:** Võ Huyền Khánh May
+**Cohort:** A20-K2
+**Tier đã chạy:** T4
+**Date:** _(điền ngày bạn submit)_
 
 ---
 
@@ -11,13 +11,13 @@
 
 | Item | Value |
 |---|---|
-| GPU | _<e.g., Free Colab T4 16GB / RTX 4060 8GB / A100 40GB>_ |
-| CUDA / driver | _<e.g., CUDA 12.1, driver 535>_ |
-| Base model | _<e.g., unsloth/Qwen2.5-3B-bnb-4bit>_ |
-| SFT dataset slice | _<e.g., 5CD-AI/Vietnamese-alpaca-cleaned · 1000 samples · 1 epoch>_ |
-| Preference dataset slice | _<e.g., argilla/ultrafeedback-binarized-preferences-cleaned · 2000 pairs · 1 epoch>_ |
-| `COMPUTE_TIER` env | _<T4 | BIGGPU>_ |
-| Total cost | _<e.g., $0 (free Colab) / $1.20 (Colab Pro A100 30 min)>_ |
+| GPU | Free Colab T4 16 GB _(xác nhận lại từ nvidia-smi khi chạy)_ |
+| CUDA / driver | _(điền từ output `nvidia-smi` ở cell Setup)_ |
+| Base model | unsloth/Qwen2.5-3B-bnb-4bit |
+| SFT dataset slice | 5CD-AI/Vietnamese-alpaca-cleaned · 1000 samples · 1 epoch |
+| Preference dataset slice | argilla/ultrafeedback-binarized-preferences-cleaned · 1000 pairs · 1 epoch |
+| `COMPUTE_TIER` env | T4 |
+| Total cost | $0 (free Colab) |
 
 ---
 
@@ -39,9 +39,11 @@
 
 ## 3. Reward curves analysis (≥ 100 words)
 
-> **Paste `03_dpo_reward_curves.png` here** (or link to it in `submission/screenshots/`).
+> **Paste `03-dpo-reward-curves.png` here** (or link to it in `submission/screenshots/`).
 
 _Interpret both `chosen_rewards` and `rejected_rewards` separately. Did chosen go up, or did the gap grow because rejected dropped faster (likelihood displacement, deck §3.4)? What does this tell you about whether DPO did what you wanted? Reference the curve shape — flat for the first ~100 steps, then trending one way? KL divergence to reference at end?_
+
+> ⚠️ **Lưu ý kỹ thuật (xem `plan.md` §10-B1):** trong NB3 của lab này, reference model thực tế là **base 4-bit gốc** (không phải SFT-mini) — TRL `disable_adapter()` lột toàn bộ adapter để lấy reference forward pass. Nên implicit reward = log(π_policy / π_base). Khi diễn giải gap, nhớ đây là gap so với base; nếu `chosen_rewards` đi xuống mà gap vẫn dương thì đó đúng là likelihood displacement (deck §3.4), không phải bug.
 
 _Answer here. ≥ 100 words._
 
@@ -49,7 +51,7 @@ _Answer here. ≥ 100 words._
 
 ## 4. Qualitative comparison (≥ 8 examples)
 
-> **Paste `04_side_by_side_table.png` here** (or summarize in markdown).
+> **Paste `04-side-by-side-table.png` here** (or summarize in markdown).
 
 | # | Prompt category | Prompt (truncated) | SFT-only | SFT+DPO | Winner |
 |---|---|---|---|---|---|
